@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { getAllAppointments } from "./actions";
 import { motion } from "framer-motion";
-import { format, isToday, isThisWeek, isThisMonth, parseISO } from "date-fns";
+import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
 import { AdminLogin } from "@/components/AdminLogin";
 import { Button } from "@/components/ui/button";
 import { LogOut, Calendar } from "lucide-react";
@@ -13,7 +13,9 @@ export default function AdminPage() {
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState("");
-    const [dateFilter, setDateFilter] = useState<"all" | "today" | "week" | "month">("all");
+    const [filterMode, setFilterMode] = useState<"all" | "date" | "month">("all");
+    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [selectedMonth, setSelectedMonth] = useState<string>(new Date().toISOString().slice(0, 7));
 
     // Check if user is already logged in
     useEffect(() => {
@@ -37,23 +39,22 @@ export default function AdminPage() {
 
     // Filter appointments based on date filter
     const filteredAppointments = useMemo(() => {
-        if (dateFilter === "all") return appointments;
+        if (filterMode === "all") return appointments;
 
         return appointments.filter(apt => {
             const aptDate = parseISO(apt.date);
 
-            switch (dateFilter) {
-                case "today":
-                    return isToday(aptDate);
-                case "week":
-                    return isThisWeek(aptDate);
-                case "month":
-                    return isThisMonth(aptDate);
-                default:
-                    return true;
+            if (filterMode === "date") {
+                return isSameDay(aptDate, parseISO(selectedDate));
             }
+
+            if (filterMode === "month") {
+                return isSameMonth(aptDate, parseISO(selectedMonth));
+            }
+
+            return true;
         });
-    }, [appointments, dateFilter]);
+    }, [appointments, filterMode, selectedDate, selectedMonth]);
 
     const handleLogin = (username: string, password: string) => {
         // Simple credential check (credentials: admin / admin123)
@@ -91,15 +92,32 @@ export default function AdminPage() {
                         <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl shadow-sm border border-border">
                             <Calendar className="w-4 h-4 text-muted-foreground" />
                             <select
-                                value={dateFilter}
-                                onChange={(e) => setDateFilter(e.target.value as any)}
+                                value={filterMode}
+                                onChange={(e) => setFilterMode(e.target.value as any)}
                                 className="text-sm font-medium bg-transparent border-none outline-none cursor-pointer"
                             >
                                 <option value="all">All Dates</option>
-                                <option value="today">Today</option>
-                                <option value="week">This Week</option>
-                                <option value="month">This Month</option>
+                                <option value="date">Select Date</option>
+                                <option value="month">Select Month</option>
                             </select>
+
+                            {filterMode === "date" && (
+                                <input
+                                    type="date"
+                                    value={selectedDate}
+                                    onChange={(e) => setSelectedDate(e.target.value)}
+                                    className="text-sm border rounded px-2 py-1 ml-2"
+                                />
+                            )}
+
+                            {filterMode === "month" && (
+                                <input
+                                    type="month"
+                                    value={selectedMonth}
+                                    onChange={(e) => setSelectedMonth(e.target.value)}
+                                    className="text-sm border rounded px-2 py-1 ml-2"
+                                />
+                            )}
                         </div>
 
                         {/* Stats */}

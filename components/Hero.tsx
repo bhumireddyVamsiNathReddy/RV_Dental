@@ -55,12 +55,12 @@ export function Hero() {
                         className="w-full lg:w-1/2 space-y-6"
                     >
                         <div>
-                            <h2 className="text-3xl md:text-4xl font-bold mb-2">Dr. Sarah Smith</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold mb-2">Dr. Doctor </h2>
                             <p className="text-xl text-primary font-medium">Orthodontist</p>
                         </div>
 
                         <p className="text-lg text-muted-foreground leading-relaxed">
-                            Dr. Smith has over 15 years of experience in creating beautiful smiles.
+                            Dr. Doctor has over 15 years of experience in creating beautiful smiles.
                             She specializes in Invisalign and cosmetic dentistry, bringing expertise
                             and compassion to every patient interaction.
                         </p>

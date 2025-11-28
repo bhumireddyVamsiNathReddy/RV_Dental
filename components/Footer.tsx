@@ -48,17 +48,17 @@ export function Footer() {
                                     rel="noopener noreferrer"
                                     className="hover:text-primary transition-colors"
                                 >
-                                    123 Wellness Avenue,<br />
-                                    Serenity District, CA 90210
+                                    RvDental,<br />
+                                    Opp Kadapa RTC Bustand
                                 </a>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone className="h-5 w-5 text-primary shrink-0" />
-                                <span>+1 (555) 123-4567</span>
+                                <span>+91 9999999999</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail className="h-5 w-5 text-primary shrink-0" />
-                                <span>hello@rvdental.com</span>
+                                <span>rvdental@gmail.com</span>
                             </li>
                         </ul>
                     </div>

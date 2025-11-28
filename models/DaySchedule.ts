@@ -8,6 +8,7 @@ export interface ISlot {
     patientName?: string;
     patientMobile?: string;
     patientEmail?: string;
+    reasonForVisit?: string;
 }
 
 export interface IDaySchedule extends Document {
@@ -24,7 +25,8 @@ const SlotSchema: Schema = new Schema({
     bookedBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     patientName: { type: String },
     patientMobile: { type: String },
-    patientEmail: { type: String }
+    patientEmail: { type: String },
+    reasonForVisit: { type: String }
 });
 
 const DayScheduleSchema: Schema = new Schema({

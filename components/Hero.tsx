@@ -34,7 +34,7 @@ export function Hero() {
                         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                         className="w-full lg:w-1/2"
                     >
-                        <div className="relative w-full h-[400px] sm:h-[500px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl">
+                        <div className="relative w-full h-[450px] sm:h-[550px] lg:h-[650px] rounded-3xl overflow-hidden shadow-2xl">
                             <Image
                                 src="/images/doctor.png"
                                 alt="Dr. Sarah Smith"

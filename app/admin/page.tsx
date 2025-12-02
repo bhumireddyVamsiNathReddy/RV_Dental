@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { getAllAppointments } from "./actions";
+import { getAllAppointments, getDoctorAvailability, updateDoctorAvailability } from "./actions";
 import { motion } from "framer-motion";
 import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
 import { AdminLogin } from "@/components/AdminLogin";
 import { Button } from "@/components/ui/button";
-import { LogOut, Calendar } from "lucide-react";
+import { LogOut, Calendar, Clock, Save, Plus, Trash } from "lucide-react";
 
 export default function AdminPage() {
     const [appointments, setAppointments] = useState<any[]>([]);
@@ -16,6 +16,9 @@ export default function AdminPage() {
     const [filterMode, setFilterMode] = useState<"all" | "date" | "month">("all");
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [selectedMonth, setSelectedMonth] = useState<string>(new Date().toISOString().slice(0, 7));
+    const [availability, setAvailability] = useState<{ day: string; slots: string[] }[]>([]);
+    const [isEditingAvailability, setIsEditingAvailability] = useState(false);
+    const [savingAvailability, setSavingAvailability] = useState(false);
 
     // Check if user is already logged in
     useEffect(() => {
@@ -29,8 +32,12 @@ export default function AdminPage() {
     useEffect(() => {
         if (isAuthenticated) {
             async function fetchData() {
-                const data = await getAllAppointments();
-                setAppointments(data);
+                const [appointmentsData, availabilityData] = await Promise.all([
+                    getAllAppointments(),
+                    getDoctorAvailability()
+                ]);
+                setAppointments(appointmentsData);
+                setAvailability(availabilityData);
                 setLoading(false);
             }
             fetchData();
@@ -72,6 +79,37 @@ export default function AdminPage() {
         localStorage.removeItem("adminAuthenticated");
         setAppointments([]);
         setLoading(true);
+    };
+
+    const handleSaveAvailability = async () => {
+        setSavingAvailability(true);
+        try {
+            await updateDoctorAvailability(availability);
+            setIsEditingAvailability(false);
+        } catch (error) {
+            console.error("Failed to save availability:", error);
+            alert("Failed to save availability settings");
+        } finally {
+            setSavingAvailability(false);
+        }
+    };
+
+    const updateDaySlots = (dayIndex: number, newSlots: string[]) => {
+        const newAvailability = [...availability];
+        newAvailability[dayIndex].slots = newSlots;
+        setAvailability(newAvailability);
+    };
+
+    const generateTimeSlots = (start: string, end: string) => {
+        const slots = [];
+        let current = parseInt(start.split(':')[0]);
+        const endHour = parseInt(end.split(':')[0]);
+
+        while (current <= endHour) {
+            slots.push(`${current.toString().padStart(2, '0')}:00`);
+            current++;
+        }
+        return slots;
     };
 
     // Show login page if not authenticated
@@ -195,6 +233,126 @@ export default function AdminPage() {
                             </table>
                         </div>
                     )}
+                </div>
+
+                {/* Availability Settings Section */}
+                <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-sm border border-white/20 overflow-hidden">
+                    <div className="p-6 border-b border-border/50 flex justify-between items-center">
+                        <h2 className="text-xl font-semibold">Availability Settings</h2>
+                        {!isEditingAvailability ? (
+                            <Button onClick={() => setIsEditingAvailability(true)} variant="outline" size="sm">
+                                Edit Availability
+                            </Button>
+                        ) : (
+                            <div className="flex gap-2">
+                                <Button onClick={() => setIsEditingAvailability(false)} variant="ghost" size="sm">
+                                    Cancel
+                                </Button>
+                                <Button onClick={handleSaveAvailability} disabled={savingAvailability} size="sm">
+                                    {savingAvailability ? "Saving..." : "Save Changes"}
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {availability.map((daySchedule, index) => (
+                                <div key={daySchedule.day} className={`p-4 rounded-xl border ${daySchedule.slots.length > 0 ? 'bg-white border-border' : 'bg-gray-50 border-transparent'}`}>
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h3 className="font-medium">{daySchedule.day}</h3>
+                                        <span className={`text-xs px-2 py-1 rounded-full ${daySchedule.slots.length > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
+                                            {daySchedule.slots.length > 0 ? 'Open' : 'Closed'}
+                                        </span>
+                                    </div>
+
+                                    {isEditingAvailability ? (
+                                        <div className="space-y-3">
+                                            <div className="flex items-center gap-2">
+                                                <label className="text-xs text-muted-foreground">Status:</label>
+                                                <select
+                                                    className="text-sm border rounded p-1"
+                                                    value={daySchedule.slots.length > 0 ? "open" : "closed"}
+                                                    onChange={(e) => {
+                                                        if (e.target.value === "closed") {
+                                                            updateDaySlots(index, []);
+                                                        } else {
+                                                            // Default to 10am - 8pm
+                                                            updateDaySlots(index, generateTimeSlots("10:00", "20:00"));
+                                                        }
+                                                    }}
+                                                >
+                                                    <option value="open">Open</option>
+                                                    <option value="closed">Closed</option>
+                                                </select>
+                                            </div>
+
+                                            {daySchedule.slots.length > 0 && (
+                                                <div className="space-y-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <label className="text-xs text-muted-foreground w-8">Start:</label>
+                                                        <select
+                                                            className="text-sm border rounded p-1 w-full"
+                                                            value={daySchedule.slots[0]}
+                                                            onChange={(e) => {
+                                                                const start = e.target.value;
+                                                                const end = daySchedule.slots[daySchedule.slots.length - 1];
+                                                                updateDaySlots(index, generateTimeSlots(start, end));
+                                                            }}
+                                                        >
+                                                            {Array.from({ length: 24 }).map((_, i) => (
+                                                                <option key={i} value={`${i.toString().padStart(2, '0')}:00`}>
+                                                                    {`${i.toString().padStart(2, '0')}:00`}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <label className="text-xs text-muted-foreground w-8">End:</label>
+                                                        <select
+                                                            className="text-sm border rounded p-1 w-full"
+                                                            value={daySchedule.slots[daySchedule.slots.length - 1]}
+                                                            onChange={(e) => {
+                                                                const start = daySchedule.slots[0];
+                                                                const end = e.target.value;
+                                                                updateDaySlots(index, generateTimeSlots(start, end));
+                                                            }}
+                                                        >
+                                                            {Array.from({ length: 24 }).map((_, i) => (
+                                                                <option key={i} value={`${i.toString().padStart(2, '0')}:00`}>
+                                                                    {`${i.toString().padStart(2, '0')}:00`}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="text-sm text-muted-foreground">
+                                            {daySchedule.slots.length > 0 ? (
+                                                <div className="flex flex-wrap gap-1">
+                                                    {daySchedule.slots.length > 4 ? (
+                                                        <>
+                                                            <span className="bg-secondary px-1.5 py-0.5 rounded text-xs">{daySchedule.slots[0]}</span>
+                                                            <span>-</span>
+                                                            <span className="bg-secondary px-1.5 py-0.5 rounded text-xs">{daySchedule.slots[daySchedule.slots.length - 1]}</span>
+                                                        </>
+                                                    ) : (
+                                                        daySchedule.slots.map(slot => (
+                                                            <span key={slot} className="bg-secondary px-1.5 py-0.5 rounded text-xs">{slot}</span>
+                                                        ))
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <span className="italic">No slots available</span>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

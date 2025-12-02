@@ -16,8 +16,9 @@ export async function getAvailableSlots(date: string) {
         const dayName = requestedDate.toLocaleDateString('en-US', { weekday: 'long' });
 
         // Get doctor's availability for this day
-        const Doctor = (await import('@/models/Doctor')).default;
-        const doctor = await Doctor.findOne().lean();
+        const DoctorModule = await import('@/models/Doctor');
+        const Doctor = DoctorModule.default;
+        const doctor = await Doctor.findOne().lean().exec();
 
         if (!doctor) {
             console.warn('No doctor found in database');

@@ -15,13 +15,13 @@ const treatments = [
         title: "Orthodontics",
         description: "Achieve perfectly aligned teeth with our advanced orthodontic solutions",
         beforeImage: "/images/treatments/orthodontics-before.png",
-        afterImage: "/images/treatments/orthodontics-after.png",
+        afterImage: "/images/treatments/orthodontics-after.webp",
     },
     {
         title: "Dental Veneers",
         description: "Transform your smile with custom-crafted porcelain veneers",
         beforeImage: "/images/treatments/veneers-before.png",
-        afterImage: "/images/treatments/veneers-after.png",
+        afterImage: "/images/treatments/veneers-after.jpg",
     },
 ];
 

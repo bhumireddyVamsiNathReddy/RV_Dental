@@ -24,12 +24,12 @@ export function Navbar() {
         >
             <nav className="flex items-center justify-between w-full max-w-5xl px-6 py-3 bg-white/70 backdrop-blur-xl border border-white/20 shadow-lg rounded-2xl">
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="relative w-8 h-8">
+                    <div className="relative w-8 h-8 rounded-full overflow-hidden bg-white shadow-sm">
                         <Image
                             src="/logo.png"
                             alt="RV Dental Logo"
                             fill
-                            className="object-contain"
+                            className="object-cover"
                             priority
                         />
                     </div>

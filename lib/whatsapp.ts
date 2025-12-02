@@ -1,16 +1,7 @@
-import twilio from 'twilio';
-
-// Initialize Twilio client
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const whatsappFrom = process.env.TWILIO_WHATSAPP_NUMBER; // Format: whatsapp:+14155238886
-
-let twilioClient: ReturnType<typeof twilio> | null = null;
-
-// Only initialize if credentials are present
-if (accountSid && authToken) {
-    twilioClient = twilio(accountSid, authToken);
-}
+// Meta WhatsApp Cloud API Configuration
+const phoneNumberId = process.env.META_WHATSAPP_PHONE_NUMBER_ID;
+const accessToken = process.env.META_WHATSAPP_ACCESS_TOKEN;
+const apiVersion = process.env.META_WHATSAPP_API_VERSION || 'v21.0';
 
 export async function sendWhatsAppConfirmation(
     patientMobile: string,
@@ -20,47 +11,135 @@ export async function sendWhatsAppConfirmation(
         time: string;
     }
 ) {
-    // If Twilio is not configured, log and return
-    if (!twilioClient || !whatsappFrom) {
-        console.log('WhatsApp notification skipped - Twilio not configured');
+    // If Meta WhatsApp is not configured, log and return
+    if (!phoneNumberId || !accessToken) {
+        console.log('WhatsApp notification skipped - Meta WhatsApp not configured');
         console.log('Appointment details:', appointmentDetails);
         return { success: false, error: 'WhatsApp not configured' };
     }
 
     try {
-        // Format phone number to E.164 format (e.g., +919876543210)
+        // Format phone number to international format without '+' (e.g., 919876543210)
         const formattedNumber = patientMobile.startsWith('+')
-            ? patientMobile
-            : `+91${patientMobile}`; // Default to India code, adjust as needed
+            ? patientMobile.substring(1)
+            : patientMobile.startsWith('91')
+                ? patientMobile
+                : `91${patientMobile}`; // Default to India code
 
-        const message = `
-✅ *Appointment Confirmed - RV Dental*
+        // Meta WhatsApp Cloud API endpoint
+        const url = `https://graph.facebook.com/${apiVersion}/${phoneNumberId}/messages`;
 
-Hello ${appointmentDetails.patientName}! 👋
+        // Using template message (once approved by Meta)
+        const messageData = {
+            messaging_product: "whatsapp",
+            to: formattedNumber,
+            type: "template",
+            template: {
+                name: "booking_confirmation", // Must match your approved template name
+                language: {
+                    code: "en_US" // Changed to match Meta template language
+                },
+                components: [
+                    {
+                        type: "body",
+                        parameters: [
+                            {
+                                type: "text",
+                                text: appointmentDetails.patientName
+                            },
+                            {
+                                type: "text",
+                                text: appointmentDetails.date
+                            },
+                            {
+                                type: "text",
+                                text: appointmentDetails.time
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
 
-Your dental appointment has been successfully booked.
-
-📅 *Date:* ${appointmentDetails.date}
-🕒 *Time:* ${appointmentDetails.time}
-📍 *Location:* 123 Wellness Avenue, Serenity District
-
-📞 For any changes or queries, please call us at +1 (555) 123-4567
-
-We look forward to seeing you!
-
-_RV Dental - Your Smile, Our Priority_ 🦷
-        `.trim();
-
-        const response = await twilioClient.messages.create({
-            from: whatsappFrom,
-            to: `whatsapp:${formattedNumber}`,
-            body: message,
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(messageData),
         });
 
-        console.log('WhatsApp message sent successfully:', response.sid);
-        return { success: true, messageId: response.sid };
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('Failed to send WhatsApp message:', data);
+            return {
+                success: false,
+                error: data.error?.message || 'Failed to send message'
+            };
+        }
+
+        console.log('WhatsApp message sent successfully:', data.messages?.[0]?.id);
+        return { success: true, messageId: data.messages?.[0]?.id };
     } catch (error: any) {
         console.error('Failed to send WhatsApp message:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Alternative function for sending without template (for testing only)
+// Note: This won't work in production without an approved template
+export async function sendWhatsAppTestMessage(
+    patientMobile: string,
+    message: string
+) {
+    if (!phoneNumberId || !accessToken) {
+        console.log('WhatsApp notification skipped - Meta WhatsApp not configured');
+        return { success: false, error: 'WhatsApp not configured' };
+    }
+
+    try {
+        const formattedNumber = patientMobile.startsWith('+')
+            ? patientMobile.substring(1)
+            : patientMobile.startsWith('91')
+                ? patientMobile
+                : `91${patientMobile}`;
+
+        const url = `https://graph.facebook.com/${apiVersion}/${phoneNumberId}/messages`;
+
+        const messageData = {
+            messaging_product: "whatsapp",
+            to: formattedNumber,
+            type: "text",
+            text: {
+                body: message
+            }
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(messageData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('Failed to send WhatsApp test message:', data);
+            return {
+                success: false,
+                error: data.error?.message || 'Failed to send message'
+            };
+        }
+
+        console.log('WhatsApp test message sent:', data.messages?.[0]?.id);
+        return { success: true, messageId: data.messages?.[0]?.id };
+    } catch (error: any) {
+        console.error('Failed to send WhatsApp test message:', error);
         return { success: false, error: error.message };
     }
 }

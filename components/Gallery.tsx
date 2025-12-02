@@ -4,9 +4,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 const images = [
-    { src: "/images/clinic1.png", alt: "Reception Area", className: "md:col-span-2 md:row-span-2" },
-    { src: "/images/clinic2.png", alt: "Treatment Room", className: "md:col-span-1 md:row-span-1" },
-    { src: "/images/clinic3.png", alt: "Dental Tools", className: "md:col-span-1 md:row-span-1" },
+    { src: "/images/clinic1.jpg", alt: "Reception Area", className: "md:col-span-2 md:row-span-2" },
+    { src: "/images/clinic2.jpg", alt: "Treatment Room", className: "md:col-span-1 md:row-span-1" },
+    { src: "/images/clinic3.jpg", alt: "Dental Tools", className: "md:col-span-1 md:row-span-1" },
 ];
 
 export function Gallery() {

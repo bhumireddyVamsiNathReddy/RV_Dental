@@ -29,3 +29,44 @@ export async function getAllAppointments() {
 
     return appointments;
 }
+
+export async function getDoctorAvailability() {
+    await dbConnect();
+    const Doctor = (await import('@/models/Doctor')).default;
+    const doctor = await Doctor.findOne().lean();
+
+    if (!doctor) {
+        return [];
+    }
+
+    return doctor.availability.map((a: any) => ({
+        day: a.day,
+        slots: a.slots
+    }));
+}
+
+export async function updateDoctorAvailability(availability: { day: string; slots: string[] }[]) {
+    await dbConnect();
+    const Doctor = (await import('@/models/Doctor')).default;
+
+    // Update the first doctor found (assuming single doctor for now)
+    const doctor = await Doctor.findOne();
+
+    if (!doctor) {
+        throw new Error("Doctor not found");
+    }
+
+    doctor.availability = availability;
+    await doctor.save();
+
+    // Delete future schedules that have NO bookings so they can be regenerated with new availability
+    const DaySchedule = (await import('@/models/DaySchedule')).default;
+    const today = new Date().toISOString().split('T')[0];
+
+    await DaySchedule.deleteMany({
+        date: { $gte: today },
+        "slots.isBooked": { $ne: true } // Only delete if NO slots are booked
+    });
+
+    return { success: true };
+}

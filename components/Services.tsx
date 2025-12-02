@@ -5,24 +5,44 @@ import { motion } from "framer-motion";
 
 const services = [
     {
-        title: "General Dentistry",
-        description: "Comprehensive checkups, cleanings, and preventive care to keep your smile healthy.",
-        image: "/images/service_general.png",
-    },
-    {
         title: "Cosmetic Dentistry",
-        description: "Teeth whitening, veneers, and smile makeovers designed to boost your confidence.",
+        description: "Transform your smile with teeth whitening, veneers, and complete smile makeovers designed to boost your confidence.",
         image: "/images/service_cosmetic.png",
     },
     {
-        title: "Orthodontics",
-        description: "Clear aligners and modern braces for a perfectly aligned, functional smile.",
-        image: "/images/service_ortho.png",
+        title: "Dental Veneers",
+        description: "Premium porcelain veneers for a flawless, natural-looking smile that lasts for years.",
+        image: "/images/service_veeners.jpg",
     },
     {
-        title: "Pediatric Dentistry",
-        description: "Gentle, fun, and educational dental care tailored specifically for children.",
-        image: "/images/service_kids.png",
+        title: "Orthodontics",
+        description: "Advanced orthodontic solutions including clear aligners, braces, and the Damon System for perfect alignment.",
+        image: "/images/service_ortho.webp",
+    },
+    {
+        title: "Invisible Aligners",
+        description: "Discreet clear aligners for straightening teeth without the look of traditional braces.",
+        image: "/images/service_InvisibleBraces.jpg",
+    },
+    {
+        title: "Braces",
+        description: "Modern metal and ceramic braces for effective teeth alignment and bite correction.",
+        image: "/images/service_braces.jpg",
+    },
+    {
+        title: "Damon System",
+        description: "Self-ligating braces technology for faster treatment, fewer appointments, and greater comfort.",
+        image: "/images/service_demonbraces.jpg",
+    },
+    {
+        title: "Zirconia Crowns",
+        description: "High-strength, natural-looking zirconia ceramic crowns for durable and aesthetic tooth restoration.",
+        image: "/images/service_zirconia.webp",
+    },
+    {
+        title: "Root Canal Treatment",
+        description: "Advanced endodontic care to save infected teeth and relieve pain with precision and comfort.",
+        image: "/images/service_RootCanal.webp",
     },
 ];
 
@@ -37,7 +57,7 @@ export function Services() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {services.map((service, index) => (
                         <motion.div
                             key={index}

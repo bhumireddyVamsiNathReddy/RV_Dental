@@ -37,10 +37,8 @@ const DayScheduleSchema: Schema = new Schema({
 });
 
 // Optimistic concurrency control
-/* eslint-disable @typescript-eslint/no-explicit-any */
-DayScheduleSchema.pre('save', function (next: any) {
+DayScheduleSchema.pre('save', function () {
     this.increment();
-    next();
 });
 
 const DaySchedule: Model<IDaySchedule> = mongoose.models.DaySchedule || mongoose.model<IDaySchedule>('DaySchedule', DayScheduleSchema);

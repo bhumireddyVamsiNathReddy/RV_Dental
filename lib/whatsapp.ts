@@ -37,7 +37,7 @@ export async function sendWhatsAppConfirmation(
             template: {
                 name: "booking_confirmation", // Must match your approved template name
                 language: {
-                    code: "en_US" // Changed to match Meta template language
+                    code: "en" // Changed to match Meta template language
                 },
                 components: [
                     {

@@ -14,14 +14,26 @@ const treatments = [
     {
         title: "Orthodontics",
         description: "Achieve perfectly aligned teeth with our advanced orthodontic solutions",
-        beforeImage: "/images/treatments/orthodontics-before.png",
-        afterImage: "/images/treatments/orthodontics-after.webp",
+        beforeImage: "/images/treatments/ortho-before.png",
+        afterImage: "/images/treatments/ortho-after.png",
     },
     {
         title: "Dental Veneers",
         description: "Transform your smile with custom-crafted porcelain veneers",
         beforeImage: "/images/treatments/veneers-before.png",
-        afterImage: "/images/treatments/veneers-after.jpg",
+        afterImage: "/images/treatments/veneers-after.png",
+    },
+    {
+        title: "Dental Crowns",
+        description: "Restore damaged teeth with durable, natural-looking crowns",
+        beforeImage: "/images/treatments/crowns-before.png",
+        afterImage: "/images/treatments/crowns-after.png",
+    },
+    {
+        title: "Dental Implants",
+        description: "Replace missing teeth with permanent, life-like implants",
+        beforeImage: "/images/treatments/implants-before.png",
+        afterImage: "/images/treatments/implants-after.png",
     },
 ];
 
@@ -44,7 +56,7 @@ export function BeforeAfter() {
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {treatments.map((treatment, index) => (
                         <motion.div
                             key={treatment.title}

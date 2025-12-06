@@ -111,25 +111,8 @@ export async function bookSlot(
 
         await session.commitTransaction();
 
-        // Send WhatsApp confirmation after successful booking
-        try {
-            const { sendWhatsAppConfirmation } = await import('@/lib/whatsapp');
-            const formattedDate = new Date(date).toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+        // WhatsApp confirmation removed as per admin request - manual sending implemented in dashboard
 
-            await sendWhatsAppConfirmation(patientDetails.mobile, {
-                patientName: patientDetails.name,
-                date: formattedDate,
-                time: time
-            });
-        } catch (whatsappError) {
-            // Log error but don't fail the booking
-            console.error('WhatsApp notification failed:', whatsappError);
-        }
 
         return { success: true };
     } catch (error: any) {

@@ -34,10 +34,10 @@ export function Hero() {
                         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                         className="w-full lg:w-1/2"
                     >
-                        <div className="relative w-full h-[450px] sm:h-[550px] lg:h-[650px] rounded-3xl overflow-hidden shadow-2xl">
+                        <div className="relative w-full h-[400px] sm:h-[500px] lg:h-[550px] rounded-3xl overflow-hidden shadow-2xl">
                             <Image
-                                src="/images/doctor.png"
-                                alt="Dr. Sarah Smith"
+                                src="/images/doctor_img.png"
+                                alt="Dr. Veera Reddy"
                                 fill
                                 className="object-cover"
                                 priority
@@ -79,10 +79,10 @@ export function Hero() {
                         </div>
                     </motion.div>
                 </div>
-            </div>
+            </div >
 
             <div className="absolute top-0 right-0 -z-10 w-[800px] h-[800px] bg-blue-50/50 rounded-full blur-3xl opacity-50 translate-x-1/3 -translate-y-1/4" />
             <div className="absolute bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-indigo-50/50 rounded-full blur-3xl opacity-50 -translate-x-1/3 translate-y-1/4" />
-        </section>
+        </section >
     );
 }

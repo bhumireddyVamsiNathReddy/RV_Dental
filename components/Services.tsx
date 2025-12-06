@@ -44,6 +44,21 @@ const services = [
         description: "Advanced endodontic care to save infected teeth and relieve pain with precision and comfort.",
         image: "/images/service_RootCanal.webp",
     },
+    {
+        title: "Bridges",
+        description: "Restore your smile and bite function with custom-fitted dental bridges that seamlessly replace missing teeth.",
+        image: "/images/service_bridges.png",
+    },
+    {
+        title: "Smile Designing",
+        description: "A comprehensive cosmetic approach to plan and create your perfect smile using advanced digital technology.",
+        image: "/images/smile-designing.jpeg",
+    },
+    {
+        title: "Dental Implants",
+        description: "Permanent, natural-looking solution for replacing missing teeth, restoring both function and aesthetics.",
+        image: "/images/service_implants.png",
+    },
 ];
 
 export function Services() {
@@ -53,7 +68,7 @@ export function Services() {
                 <div className="text-center mb-16 space-y-4">
                     <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Our Services</h2>
                     <p className="text-muted-foreground max-w-2xl mx-auto">
-                        Expert care tailored to your unique needs.
+                        We do all services related to dental. Expert care tailored to your unique needs.
                     </p>
                 </div>
 

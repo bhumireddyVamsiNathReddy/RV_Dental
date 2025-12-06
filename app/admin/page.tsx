@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
 import { AdminLogin } from "@/components/AdminLogin";
 import { Button } from "@/components/ui/button";
-import { LogOut, Calendar, Clock, Save, Plus, Trash } from "lucide-react";
+import { LogOut, Calendar, Clock, Save, Plus, Trash, MessageCircle } from "lucide-react";
 
 export default function AdminPage() {
     const [appointments, setAppointments] = useState<any[]>([]);
@@ -198,6 +198,7 @@ export default function AdminPage() {
                                         <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">Email</th>
                                         <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">Reason</th>
                                         <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">Status</th>
+                                        <th className="text-left py-4 px-6 text-sm font-medium text-muted-foreground">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -226,6 +227,35 @@ export default function AdminPage() {
                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                     {apt.status}
                                                 </span>
+                                            </td>
+                                            <td className="py-4 px-6">
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="h-8 gap-2 bg-green-50 text-green-600 hover:bg-green-100 border-green-200"
+                                                    onClick={() => {
+                                                        const message = `*Appointment Confirmed - RV Dental* ✅
+
+Hello *${apt.patientName}*! 👋
+
+Your dental appointment has been successfully booked.
+
+📅 *Date:* ${format(new Date(apt.date), "EEEE, MMMM d, yyyy")}
+🕒 *Time:* ${apt.time}
+📍 *Location:* RV Dental Clinic
+https://maps.app.goo.gl/27wKYbcREX7UPaLs6
+
+📞 For changes or queries, call: +91 9493195941
+
+We look forward to seeing you!
+
+*RV Dental - Your Smile, Our Priority* 🦷`;
+                                                        window.open(`https://wa.me/${apt.patientMobile}?text=${encodeURIComponent(message)}`, '_blank');
+                                                    }}
+                                                >
+                                                    <MessageCircle className="w-4 h-4" />
+                                                    <span className="sr-only sm:not-sr-only sm:inline-block">WhatsApp</span>
+                                                </Button>
                                             </td>
                                         </motion.tr>
                                     ))}

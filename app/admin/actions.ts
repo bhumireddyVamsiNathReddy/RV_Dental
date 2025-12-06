@@ -9,7 +9,7 @@ export async function getAllAppointments() {
     // Fetch all schedules with booked slots
     const schedules = await DaySchedule.find({
         "slots.isBooked": true
-    }).sort({ date: 1 }).lean();
+    }).sort({ date: -1 }).lean();
 
     // Flatten and format
     const appointments = schedules.flatMap(schedule =>

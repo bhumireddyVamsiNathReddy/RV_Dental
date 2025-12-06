@@ -62,8 +62,8 @@ export default function AdminPage() {
 
             return true;
         }).sort((a, b) => {
-            const dateA = new Date(a.date).getTime();
-            const dateB = new Date(b.date).getTime();
+            const dateA = new Date(`${a.date}T${a.time}`).getTime();
+            const dateB = new Date(`${b.date}T${b.time}`).getTime();
             return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
         });
     }, [appointments, filterMode, selectedDate, selectedMonth, sortOrder]);

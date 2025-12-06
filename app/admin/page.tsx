@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
 import { AdminLogin } from "@/components/AdminLogin";
 import { Button } from "@/components/ui/button";
-import { LogOut, Calendar, Clock, Save, Plus, Trash, MessageCircle } from "lucide-react";
+import { LogOut, Calendar, Clock, Save, Plus, Trash, MessageCircle, ArrowUpDown } from "lucide-react";
 
 export default function AdminPage() {
     const [appointments, setAppointments] = useState<any[]>([]);
@@ -14,6 +14,7 @@ export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState("");
     const [filterMode, setFilterMode] = useState<"all" | "date" | "month">("all");
+    const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [selectedMonth, setSelectedMonth] = useState<string>(new Date().toISOString().slice(0, 7));
     const [availability, setAvailability] = useState<{ day: string; slots: string[] }[]>([]);
@@ -60,8 +61,12 @@ export default function AdminPage() {
             }
 
             return true;
+        }).sort((a, b) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
         });
-    }, [appointments, filterMode, selectedDate, selectedMonth]);
+    }, [appointments, filterMode, selectedDate, selectedMonth, sortOrder]);
 
     const handleLogin = (username: string, password: string) => {
         // Simple credential check (credentials: admin / admin123)
@@ -157,6 +162,19 @@ export default function AdminPage() {
                                 />
                             )}
                         </div>
+
+                        {/* Sort Button */}
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-white border-border gap-2"
+                            onClick={() => setSortOrder(prev => prev === "newest" ? "oldest" : "newest")}
+                        >
+                            <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
+                            <span className="hidden sm:inline">
+                                {sortOrder === "newest" ? "Newest First" : "Oldest First"}
+                            </span>
+                        </Button>
 
                         {/* Stats */}
                         <div className="bg-white px-4 py-2 rounded-xl shadow-sm border border-border">

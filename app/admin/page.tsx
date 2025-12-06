@@ -62,9 +62,20 @@ export default function AdminPage() {
 
             return true;
         }).sort((a, b) => {
-            const dateA = new Date(`${a.date}T${a.time}`).getTime();
-            const dateB = new Date(`${b.date}T${b.time}`).getTime();
-            return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+            // Robust date sorting with string comparison of "YYYY-MM-DD" + "THH:MM"
+            // We assume a.date and b.date are strings or can be stringified to contain YYYY-MM-DD
+
+            const dateA = String(a.date).split('T')[0];
+            const dateB = String(b.date).split('T')[0];
+
+            const dateTimeA = `${dateA}T${a.time}`;
+            const dateTimeB = `${dateB}T${b.time}`;
+
+            if (dateTimeA === dateTimeB) return 0;
+
+            return sortOrder === "newest"
+                ? (dateTimeA > dateTimeB ? -1 : 1)
+                : (dateTimeA < dateTimeB ? -1 : 1);
         });
     }, [appointments, filterMode, selectedDate, selectedMonth, sortOrder]);
 

@@ -14,8 +14,8 @@ const treatments = [
     {
         title: "Orthodontics",
         description: "Achieve perfectly aligned teeth with our advanced orthodontic solutions",
-        beforeImage: "/images/treatments/ortho-before.png",
-        afterImage: "/images/treatments/ortho-after.png",
+        beforeImage: "/images/treatments/ortho-before12.png",
+        afterImage: "/images/treatments/ortho-after12.png",
     },
     {
         title: "Dental Veneers",
@@ -32,8 +32,8 @@ const treatments = [
     {
         title: "Dental Implants",
         description: "Replace missing teeth with permanent, life-like implants",
-        beforeImage: "/images/treatments/implants-before.png",
-        afterImage: "/images/treatments/implants-after.png",
+        beforeImage: "/images/treatments/implants-before123.png",
+        afterImage: "/images/treatments/implants-after123.png",
     },
 ];
 

@@ -14,11 +14,7 @@ const services = [
         description: "Premium porcelain veneers for a flawless, natural-looking smile that lasts for years.",
         image: "/images/service_veeners.jpg",
     },
-    {
-        title: "Orthodontics",
-        description: "Advanced orthodontic solutions including clear aligners, braces, and the Damon System for perfect alignment.",
-        image: "/images/service_ortho.webp",
-    },
+
     {
         title: "Invisible Aligners",
         description: "Discreet clear aligners for straightening teeth without the look of traditional braces.",
@@ -53,7 +49,12 @@ const services = [
     {
         title: "Dental Implants",
         description: "Permanent, natural-looking solution for replacing missing teeth, restoring both function and aesthetics.",
-        image: "/images/service_implants.png",
+        image: "/images/implants.jpeg",
+    },
+    {
+        title: "Laser Treatment",
+        description: "Advanced laser technology for painless soft tissue procedures, gum reshaping, and precise treatment.",
+        image: "/images/laser.jpeg",
     },
 ];
 

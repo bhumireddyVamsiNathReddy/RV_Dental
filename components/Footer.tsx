@@ -13,13 +13,13 @@ export function Footer() {
                             Experience dentistry reimagined. Minimalist care, advanced technology, and a calming environment.
                         </p>
                         <div className="flex gap-4">
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                            <Link href="https://www.instagram.com/rvaesthetics99?igsh=MW90YW9sMXJnMHF5bQ==" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
                                 <Instagram className="h-5 w-5" />
                             </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                            <Link href="https://www.facebook.com/share/17dgbAv5NB/" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
                                 <Facebook className="h-5 w-5" />
                             </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                            <Link href="https://x.com/RvAesthetics9" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
                                 <Twitter className="h-5 w-5" />
                             </Link>
                         </div>

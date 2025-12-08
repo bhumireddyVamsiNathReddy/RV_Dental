@@ -9,6 +9,8 @@ export interface ISlot {
     patientMobile?: string;
     patientEmail?: string;
     reasonForVisit?: string;
+    status?: 'pending' | 'confirmed' | 'visited' | 'cancelled' | 'no-show';
+    treatmentDate?: Date;
 }
 
 export interface IDaySchedule extends Document {
@@ -26,7 +28,13 @@ const SlotSchema: Schema = new Schema({
     patientName: { type: String },
     patientMobile: { type: String },
     patientEmail: { type: String },
-    reasonForVisit: { type: String }
+    reasonForVisit: { type: String },
+    status: {
+        type: String,
+        enum: ['pending', 'confirmed', 'visited', 'cancelled', 'no-show'],
+        default: 'pending'
+    },
+    treatmentDate: { type: Date }
 });
 
 const DayScheduleSchema: Schema = new Schema({

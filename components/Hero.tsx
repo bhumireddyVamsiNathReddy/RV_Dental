@@ -55,12 +55,12 @@ export function Hero() {
                         className="w-full lg:w-1/2 space-y-6"
                     >
                         <div>
-                            <h2 className="text-3xl md:text-4xl font-bold mb-2">Dr. Veera Reddy</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold mb-2">Dr. G.Veera Reddy <span className="text-lg font-normal ml-2">M.D.S</span></h2>
                             <p className="text-xl text-primary font-medium">Orthodontist</p>
                         </div>
 
                         <p className="text-lg text-muted-foreground leading-relaxed">
-                            Dr. Veera Reddy has over 25 years of experience in creating beautiful smiles.
+                            Dr. G.Veera Reddy has over 25 years of experience in creating beautiful smiles.
                             He specializes in Invisalign and cosmetic dentistry, bringing expertise
                             and compassion to every patient interaction.
                         </p>

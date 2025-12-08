@@ -24,11 +24,7 @@ const services = [
         description: "Discreet clear aligners for straightening teeth without the look of traditional braces.",
         image: "/images/service_InvisibleBraces.jpg",
     },
-    {
-        title: "Braces",
-        description: "Modern metal and ceramic braces for effective teeth alignment and bite correction.",
-        image: "/images/service_braces.jpg",
-    },
+
     {
         title: "Damon System",
         description: "Self-ligating braces technology for faster treatment, fewer appointments, and greater comfort.",

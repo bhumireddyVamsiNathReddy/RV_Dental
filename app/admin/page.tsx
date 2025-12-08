@@ -1,12 +1,18 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { getAllAppointments, getDoctorAvailability, updateDoctorAvailability } from "./actions";
+import { getAllAppointments, getDoctorAvailability, updateDoctorAvailability, confirmAppointment, markTreatmentDone } from "./actions";
 import { motion } from "framer-motion";
 import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
 import { AdminLogin } from "@/components/AdminLogin";
 import { Button } from "@/components/ui/button";
 import { LogOut, Calendar, Clock, Save, Plus, Trash, MessageCircle, ArrowUpDown } from "lucide-react";
+
+const TIME_SLOTS = Array.from({ length: 24 }).map((_, i) => {
+    const h = i % 12 || 12;
+    const ampm = i < 12 ? 'AM' : 'PM';
+    return `${h.toString().padStart(2, '0')}:00 ${ampm}`;
+});
 
 export default function AdminPage() {
     const [appointments, setAppointments] = useState<any[]>([]);
@@ -117,15 +123,27 @@ export default function AdminPage() {
     };
 
     const generateTimeSlots = (start: string, end: string) => {
-        const slots = [];
-        let current = parseInt(start.split(':')[0]);
-        const endHour = parseInt(end.split(':')[0]);
+        const startIndex = TIME_SLOTS.indexOf(start);
+        const endIndex = TIME_SLOTS.indexOf(end);
 
-        while (current <= endHour) {
-            slots.push(`${current.toString().padStart(2, '0')}:00`);
-            current++;
-        }
-        return slots;
+        if (startIndex === -1 || endIndex === -1 || startIndex > endIndex) return [];
+
+        return TIME_SLOTS.slice(startIndex, endIndex + 1);
+    };
+
+    const handleConfirm = async (id: string) => {
+        if (!confirm("Are you sure you want to confirm this appointment?")) return;
+        await confirmAppointment(id);
+        // Refresh data
+        const data = await getAllAppointments();
+        setAppointments(data);
+    };
+
+    const handleTreatmentDone = async (id: string) => {
+        if (!confirm("Mark treatment as done?")) return;
+        await markTreatmentDone(id);
+        const data = await getAllAppointments();
+        setAppointments(data);
     };
 
     // Show login page if not authenticated
@@ -253,11 +271,31 @@ export default function AdminPage() {
                                             <td className="py-4 px-6 text-sm text-muted-foreground">{apt.patientEmail || "-"}</td>
                                             <td className="py-4 px-6 text-sm text-muted-foreground max-w-xs truncate" title={apt.reasonForVisit}>{apt.reasonForVisit || "-"}</td>
                                             <td className="py-4 px-6">
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    {apt.status}
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${apt.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                                                        apt.status === 'visited' ? 'bg-green-100 text-green-800' :
+                                                            'bg-yellow-100 text-yellow-800'
+                                                    }`}>
+                                                    {apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
                                                 </span>
+                                                {apt.treatmentDate && (
+                                                    <div className="text-xs text-muted-foreground mt-1">
+                                                        {format(new Date(apt.treatmentDate), "MMM d, h:mm a")}
+                                                    </div>
+                                                )}
                                             </td>
-                                            <td className="py-4 px-6">
+                                            <td className="py-4 px-6 flex items-center gap-2">
+                                                {apt.status === 'pending' && (
+                                                    <Button size="sm" onClick={() => handleConfirm(apt.id)} className="bg-blue-600 hover:bg-blue-700 text-white h-8 text-xs">
+                                                        Confirm
+                                                    </Button>
+                                                )}
+
+                                                {apt.status === 'confirmed' && (
+                                                    <Button size="sm" onClick={() => handleTreatmentDone(apt.id)} className="bg-green-600 hover:bg-green-700 text-white h-8 text-xs">
+                                                        Treatment Done
+                                                    </Button>
+                                                )}
+
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
@@ -283,7 +321,6 @@ We look forward to seeing you!
                                                     }}
                                                 >
                                                     <MessageCircle className="w-4 h-4" />
-                                                    <span className="sr-only sm:not-sr-only sm:inline-block">WhatsApp</span>
                                                 </Button>
                                             </td>
                                         </motion.tr>
@@ -337,7 +374,7 @@ We look forward to seeing you!
                                                             updateDaySlots(index, []);
                                                         } else {
                                                             // Default to 10am - 8pm
-                                                            updateDaySlots(index, generateTimeSlots("10:00", "20:00"));
+                                                            updateDaySlots(index, generateTimeSlots("10:00 AM", "08:00 PM"));
                                                         }
                                                     }}
                                                 >
@@ -359,9 +396,9 @@ We look forward to seeing you!
                                                                 updateDaySlots(index, generateTimeSlots(start, end));
                                                             }}
                                                         >
-                                                            {Array.from({ length: 24 }).map((_, i) => (
-                                                                <option key={i} value={`${i.toString().padStart(2, '0')}:00`}>
-                                                                    {`${i.toString().padStart(2, '0')}:00`}
+                                                            {TIME_SLOTS.map((slot) => (
+                                                                <option key={slot} value={slot}>
+                                                                    {slot}
                                                                 </option>
                                                             ))}
                                                         </select>
@@ -377,9 +414,9 @@ We look forward to seeing you!
                                                                 updateDaySlots(index, generateTimeSlots(start, end));
                                                             }}
                                                         >
-                                                            {Array.from({ length: 24 }).map((_, i) => (
-                                                                <option key={i} value={`${i.toString().padStart(2, '0')}:00`}>
-                                                                    {`${i.toString().padStart(2, '0')}:00`}
+                                                            {TIME_SLOTS.map((slot) => (
+                                                                <option key={slot} value={slot}>
+                                                                    {slot}
                                                                 </option>
                                                             ))}
                                                         </select>

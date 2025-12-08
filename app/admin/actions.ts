@@ -23,11 +23,45 @@ export async function getAllAppointments() {
                 patientMobile: slot.patientMobile || "N/A",
                 patientEmail: slot.patientEmail || "",
                 reasonForVisit: slot.reasonForVisit || "",
-                status: "Confirmed"
+                status: slot.status || "pending",
+                treatmentDate: slot.treatmentDate
             }))
     );
 
     return appointments;
+}
+
+export async function confirmAppointment(slotId: string) {
+    await dbConnect();
+    const DaySchedule = (await import('@/models/DaySchedule')).default;
+
+    await DaySchedule.findOneAndUpdate(
+        { "slots._id": slotId },
+        {
+            $set: {
+                "slots.$.status": "confirmed"
+            }
+        }
+    );
+
+    return { success: true };
+}
+
+export async function markTreatmentDone(slotId: string) {
+    await dbConnect();
+    const DaySchedule = (await import('@/models/DaySchedule')).default;
+
+    await DaySchedule.findOneAndUpdate(
+        { "slots._id": slotId },
+        {
+            $set: {
+                "slots.$.status": "visited",
+                "slots.$.treatmentDate": new Date()
+            }
+        }
+    );
+
+    return { success: true };
 }
 
 export async function getDoctorAvailability() {

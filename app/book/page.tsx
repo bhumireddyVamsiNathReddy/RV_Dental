@@ -74,6 +74,17 @@ export default function BookingPage() {
         setErrorMessage("");
     };
 
+    const formatTime = (time: string) => {
+        // If already has AM/PM, return as is (normalized)
+        if (time.toLowerCase().includes('m')) return time;
+
+        const [hours, minutes] = time.split(':');
+        const h = parseInt(hours);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 || 12;
+        return `${h12}:${minutes} ${ampm}`;
+    };
+
     return (
         <div className="min-h-screen bg-secondary/30 pt-24 pb-12 px-4 md:px-6">
             <div className="max-w-4xl mx-auto space-y-8">
@@ -144,7 +155,7 @@ export default function BookingPage() {
                                                     : "bg-white hover:border-primary/50 border-border"
                                         )}
                                     >
-                                        {slot.time}
+                                        {formatTime(slot.time)}
                                     </button>
                                 ))}
                             </div>
@@ -182,7 +193,7 @@ export default function BookingPage() {
                                     <p className="text-muted-foreground">
                                         Your appointment is set for <br />
                                         <span className="font-semibold text-foreground">
-                                            {format(selectedDate, "MMMM d, yyyy")} at {selectedSlot}
+                                            {format(selectedDate, "MMMM d, yyyy")} at {formatTime(selectedSlot)}
                                         </span>
                                     </p>
                                     <Button onClick={() => {
@@ -205,7 +216,7 @@ export default function BookingPage() {
                                 >
                                     <div className="p-4 bg-primary/5 rounded-xl mb-2 border border-primary/10">
                                         <p className="text-sm font-medium text-primary">
-                                            Selected: {format(selectedDate, "MMM d")} at {selectedSlot}
+                                            Selected: {format(selectedDate, "MMM d")} at {formatTime(selectedSlot)}
                                         </p>
                                     </div>
 

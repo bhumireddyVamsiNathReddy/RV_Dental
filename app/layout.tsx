@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     icon: "/logo.png",
     apple: "/logo.png",
   },
+  verification: {
+    google: "u4KbB2vWrVvNaEkvh_rM2vu2NTXxJEE7...",
+  },
 };
 
 const jsonLd = {

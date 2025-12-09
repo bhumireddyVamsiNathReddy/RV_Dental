@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     apple: "/logo.png",
   },
   verification: {
-    google: "u4KbB2vWrVvNaEkvh_rM2vu2NTXxJEE7...",
+    google: "u4KbB2vWrVvNaEkvh_rM2vu2NTXxJEE7_R-GzHQ4LOE",
   },
 };
 

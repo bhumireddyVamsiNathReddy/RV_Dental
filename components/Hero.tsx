@@ -21,7 +21,7 @@ export function Hero() {
                         <span className="text-primary">Confidence.</span>
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                        Experience dentistry reimagined. Minimalist care, advanced technology, and a calming environment designed for your comfort.
+                        Experience premium dental care in Kadapa. Minimalist care, advanced technology, and a calming environment designed for your comfort.
                     </p>
                 </motion.div>
 

@@ -49,7 +49,8 @@ export function Footer() {
                                     className="hover:text-primary transition-colors"
                                 >
                                     RvDental,<br />
-                                    Opp Kadapa RTC Bustand
+                                    Opposite Kadapa RTC Bus Stand,<br />
+                                    Kadapa - 516001
                                 </a>
                             </li>
                             <li className="flex items-center gap-3">

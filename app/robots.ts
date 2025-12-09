@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/admin', '/super-admin', '/api/'],
         },
-        sitemap: 'https://www.rvdental.net/sitemap.xml',
+        sitemap: 'https://rvdental.net/sitemap.xml',
     }
 }

@@ -1,62 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
-const services = [
-    {
-        title: "Cosmetic Dentistry",
-        description: "Transform your smile with teeth whitening, veneers, and complete smile makeovers designed to boost your confidence.",
-        image: "/images/service_cosmetic.png",
-    },
-    {
-        title: "Dental Veneers",
-        description: "Premium porcelain veneers for a flawless, natural-looking smile that lasts for years.",
-        image: "/images/service_veeners.jpg",
-    },
-
-    {
-        title: "Invisible Aligners",
-        description: "Discreet clear aligners for straightening teeth without the look of traditional braces.",
-        image: "/images/service_InvisibleBraces.jpg",
-    },
-
-    {
-        title: "Damon System",
-        description: "Self-ligating braces technology for faster treatment, fewer appointments, and greater comfort.",
-        image: "/images/service_demonbraces.jpg",
-    },
-    {
-        title: "Zirconia Crowns",
-        description: "High-strength, natural-looking zirconia ceramic crowns for durable and aesthetic tooth restoration.",
-        image: "/images/service_zirconia.webp",
-    },
-    {
-        title: "Root Canal Treatment",
-        description: "Advanced endodontic care to save infected teeth and relieve pain with precision and comfort.",
-        image: "/images/service_RootCanal.webp",
-    },
-    {
-        title: "Bridges",
-        description: "Restore your smile and bite function with custom-fitted dental bridges that seamlessly replace missing teeth.",
-        image: "/images/service_bridges.png",
-    },
-    {
-        title: "Smile Designing",
-        description: "A comprehensive cosmetic approach to plan and create your perfect smile using advanced digital technology.",
-        image: "/images/smile-designing.jpeg",
-    },
-    {
-        title: "Dental Implants",
-        description: "Permanent, natural-looking solution for replacing missing teeth, restoring both function and aesthetics.",
-        image: "/images/implants.jpeg",
-    },
-    {
-        title: "Laser Treatment",
-        description: "Advanced laser technology for painless soft tissue procedures, gum reshaping, and precise treatment.",
-        image: "/images/laser.jpeg",
-    },
-];
+import { services } from "@/lib/services";
 
 export function Services() {
     return (
@@ -79,20 +27,22 @@ export function Services() {
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             className="group rounded-3xl overflow-hidden bg-secondary/30 hover:bg-secondary/50 transition-colors"
                         >
-                            <div className="relative h-48 w-full overflow-hidden">
-                                <Image
-                                    src={service.image}
-                                    alt={service.title}
-                                    fill
-                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                />
-                            </div>
-                            <div className="p-6 space-y-2">
-                                <h3 className="text-xl font-semibold">{service.title}</h3>
-                                <p className="text-sm text-muted-foreground leading-relaxed">
-                                    {service.description}
-                                </p>
-                            </div>
+                            <Link href={`/services/${service.slug}`} className="block h-full">
+                                <div className="relative h-48 w-full overflow-hidden">
+                                    <Image
+                                        src={service.image}
+                                        alt={service.title}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                </div>
+                                <div className="p-6 space-y-2">
+                                    <h3 className="text-xl font-semibold">{service.title}</h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                        {service.description}
+                                    </p>
+                                </div>
+                            </Link>
                         </motion.div>
                     ))}
                 </div>
